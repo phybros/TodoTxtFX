@@ -1,0 +1,28 @@
+name: Build macOS Package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-mac:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+        cache: maven
+    - name: Build macOS installer with Maven
+      run: mvn -B install --file pom.xml
+    - run: mkdir staging && cp target/installer/*.pkg staging
+    - uses: actions/upload-artifact@v2
+      with:
+        name: macOS-PKG
+        path: staging
