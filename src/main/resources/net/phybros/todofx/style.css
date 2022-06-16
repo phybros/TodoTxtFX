@@ -1,0 +1,24 @@
+.root{
+    -fx-font-size: 13px;
+    -fx-font-family: "Arial";
+}
+
+.priority {
+    -fx-font-weight: bold;
+}
+
+.completed-task {
+    -fx-text-fill: gray;
+    -fx-font-style: italic;
+}
+.completed-task .text {
+    -fx-strikethrough: true;
+}
+
+.project {
+    -fx-text-fill: #7434eb;
+}
+
+.context {
+    -fx-text-fill: #ebae34;
+}
