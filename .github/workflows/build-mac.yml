@@ -1,8 +1,6 @@
 name: Build macOS Package
 
-on:
-  push:
-    branches: [ main ]
+on: workflow_dispatch
 
 jobs:
   build-mac:
