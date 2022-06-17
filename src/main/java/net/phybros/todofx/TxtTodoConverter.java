@@ -28,8 +28,8 @@ public class TxtTodoConverter {
     public static TxtTask fromString(String input) {
         TxtTask result = new TxtTask();
 
-
         Matcher m = taskPattern.matcher(input);
+
         if (m.find()) {
             result.setCompleted(m.group("completed") != null);
             result.setPriority(m.group("priority"));
@@ -48,7 +48,6 @@ public class TxtTodoConverter {
 
         }
 
-        System.out.println(result.toString());
         return result;
     }
 
@@ -96,8 +95,8 @@ public class TxtTodoConverter {
         int lastIndex = 0;
 
         for (TextBoundary b : boundaries) {
-            String preceding = task.getName().substring(lastIndex, b.getStart());
-            String projectName = task.getName().substring(b.getStart(), b.getEnd());
+            String preceding = taskName.substring(lastIndex, b.getStart());
+            String projectName = taskName.substring(b.getStart(), b.getEnd());
 
             results.add(new Label(preceding));
 
@@ -109,45 +108,6 @@ public class TxtTodoConverter {
         }
 
         Label remainder = new Label(task.getName().substring(lastIndex));
-        results.add(remainder);
-
-        return results;
-    }
-
-    public static void styleRange(String text, int start, int end) {
-
-    }
-
-    private static List<Label> getLabelsForRegex(String input, Matcher m, String groupName, String cssClass) {
-        List<Label> results = new ArrayList<>();
-        List<Integer> starts = new ArrayList<>();
-        List<Integer> ends = new ArrayList<>();
-
-
-        while (m.find()) {
-            starts.add(m.start(groupName));
-            ends.add(m.end(groupName));
-        }
-
-        int lastStart = 0;
-
-        for (int i = 0; i < starts.size(); i++) {
-            int start = starts.get(i);
-            int end = ends.get(i);
-
-            String preceding = input.substring(lastStart, start);
-            String projectName = input.substring(start, end);
-
-            results.add(new Label(preceding));
-
-            Label projectLabel = new Label(projectName);
-            projectLabel.getStyleClass().add(cssClass);
-            results.add(projectLabel);
-
-            lastStart = end;
-        }
-
-        Label remainder = new Label(input.substring(lastStart));
         results.add(remainder);
 
         return results;

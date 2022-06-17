@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.nio.file.*;
 import java.time.Duration;
 import java.time.Instant;
@@ -120,7 +119,7 @@ public class HelloApplication extends Application {
                         // TODO: Do some action when there is something detected
                         Platform.runLater(() -> {
                             Instant lastSave = TxtTodoManager.getInstance().getLastSave();
-                            Instant fiveSecondsAgo = Instant.now().minus(Duration.ofSeconds(5));
+                            Instant fiveSecondsAgo = Instant.now().minus(Duration.ofSeconds(15));
 
                             if (lastSave.isBefore(fiveSecondsAgo)) {
                                 if (event.context().toString().equals(chosenFile.getName()) && event.kind() == ENTRY_MODIFY) {

@@ -1,20 +1,18 @@
 package net.phybros.todofx;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.util.*;
+import java.util.Date;
 
 public class HelloController {
-//    private ObservableList<TxtTask> tasks;
-
     @FXML
     private TextField taskEntry;
 
@@ -37,8 +35,6 @@ public class HelloController {
     public void onCommitEdit() {
         TxtTodoManager.getInstance().sortTasks();
         taskList.requestFocus();
-        taskList.getSelectionModel().select(taskList.getSelectionModel().getSelectedItem());
-        taskList.scrollTo(taskList.getSelectionModel().getSelectedItem());
     }
 
     @FXML
@@ -48,9 +44,7 @@ public class HelloController {
         taskList.setCellFactory(new Callback<ListView<TxtTask>, ListCell<TxtTask>>() {
             @Override
             public ListCell<TxtTask> call(ListView<TxtTask> listView) {
-
                 TaskListCell cell = new TaskListCell();
-
                 return cell;
             }
         });
@@ -65,66 +59,77 @@ public class HelloController {
         }
 
         taskList.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.isShortcutDown() && keyEvent.getCode() == KeyCode.UP) {
-//                taskList.getSelectionModel().getSelectedItem().setPriority("A");
-//
-                TxtTask t = taskList.getSelectionModel().getSelectedItem();
-                int newPriIndex = priorityToIndex(t.getPriority()) - 1;
-                if (newPriIndex < 0) newPriIndex = 0;
-                t.setPriority(priorities[newPriIndex]);
-                TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
-                TxtTodoManager.getInstance().sortTasks();
-//                taskList.refresh();
+            if (keyEvent.isShortcutDown()) {
 
-                keyEvent.consume();
-            }
+                TxtTask t;
+                int newPriIndex;
 
-            if (keyEvent.isShortcutDown() && keyEvent.getCode() == KeyCode.DOWN) {
-                TxtTask t = taskList.getSelectionModel().getSelectedItem();
-                int newPriIndex = priorityToIndex(t.getPriority()) + 1;
-                if (newPriIndex >= priorities.length) newPriIndex = priorities.length - 1;
-                t.setPriority(priorities[newPriIndex]);
-                TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
-                TxtTodoManager.getInstance().sortTasks();
-                keyEvent.consume();
-            }
+                switch (keyEvent.getCode()) {
+                    case UP:
+                        t = taskList.getSelectionModel().getSelectedItem();
+                        newPriIndex = priorityToIndex(t.getPriority()) - 1;
+                        if (newPriIndex < 0) newPriIndex = 0;
+                        t.setPriority(priorities[newPriIndex]);
+                        TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
+                        TxtTodoManager.getInstance().sortTasks();
 
-            if (keyEvent.isShortcutDown() && keyEvent.getCode() == KeyCode.LEFT) {
-                TxtTask t = taskList.getSelectionModel().getSelectedItem();
-                t.setPriority(null);
-                TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
-                TxtTodoManager.getInstance().sortTasks();
-                keyEvent.consume();
-            }
+                        keyEvent.consume();
 
-            if (keyEvent.isShortcutDown() && keyEvent.getCode() == KeyCode.N) {
-                taskEntry.requestFocus();
-                keyEvent.consume();
-            }
+                        break;
 
-            if (keyEvent.getCode() == KeyCode.X) {
-                TxtTask t = taskList.getSelectionModel().getSelectedItem();
+                    case DOWN:
+                        t = taskList.getSelectionModel().getSelectedItem();
+                        newPriIndex = priorityToIndex(t.getPriority()) + 1;
+                        if (newPriIndex >= priorities.length) newPriIndex = priorities.length - 1;
+                        t.setPriority(priorities[newPriIndex]);
+                        TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
+                        TxtTodoManager.getInstance().sortTasks();
+                        keyEvent.consume();
+                        break;
 
-                if (t.isCompleted()) {
-                    t.setCompletionDate(null);
-                    t.setCompleted(false);
-                } else {
-                    t.setCompleted(true);
-                    t.setCompletionDate(new Date());
-                    t.setPriority(null);
+                    case LEFT:
+                        t = taskList.getSelectionModel().getSelectedItem();
+                        t.setPriority(null);
+                        TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
+                        TxtTodoManager.getInstance().sortTasks();
+                        keyEvent.consume();
+                        break;
+
+                    case N:
+                        taskEntry.requestFocus();
+                        keyEvent.consume();
+                        break;
+
+                    default:
+                        break;
                 }
+            } else {
+                if (keyEvent.getCode() == KeyCode.X) {
+                    TxtTask t = taskList.getSelectionModel().getSelectedItem();
 
-                TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
-                TxtTodoManager.getInstance().sortTasks();
-                keyEvent.consume();
+                    if (t.isCompleted()) {
+                        t.setCompletionDate(null);
+                        t.setCompleted(false);
+                    } else {
+                        t.setCompleted(true);
+                        t.setCompletionDate(new Date());
+                        t.setPriority(null);
+                    }
+
+                    TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
+                    TxtTodoManager.getInstance().sortTasks();
+                    keyEvent.consume();
+                }
             }
         });
 
         TxtTodoManager.getInstance().getTasks().addListener(new ListChangeListener<TxtTask>() {
             @Override
             public void onChanged(Change<? extends TxtTask> change) {
-                TxtTodoManager.getInstance().setDirty(true);
-                ((Stage)taskList.getScene().getWindow()).setTitle("TodoTxtFX *");
+                if (!TxtTodoManager.getInstance().isIgnoreDataChanges()) {
+                    TxtTodoManager.getInstance().setDirty(true);
+                    ((Stage) taskList.getScene().getWindow()).setTitle("TodoTxtFX *");
+                }
             }
         });
     }
@@ -138,7 +143,6 @@ public class HelloController {
 
         taskList.requestFocus();
         taskList.getSelectionModel().select(newTask);
-        taskList.scrollTo(newTask);
         taskEntry.setText("");
         TxtTodoManager.getInstance().sortTasks();
         TxtTodoManager.getInstance().setDirty(true);

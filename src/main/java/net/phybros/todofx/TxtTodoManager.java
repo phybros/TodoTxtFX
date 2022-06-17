@@ -9,7 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Scanner;
 
 public class TxtTodoManager {
     private static TxtTodoManager single_instance = null;
@@ -17,6 +20,8 @@ public class TxtTodoManager {
     private Path todoTxtPath;
 
     private Instant lastSave;
+
+    private boolean ignoreDataChanges = false;
 
     private boolean dirty = false;
 
@@ -46,6 +51,14 @@ public class TxtTodoManager {
         this.tasks = tasks;
     }
 
+    public boolean isIgnoreDataChanges() {
+        return ignoreDataChanges;
+    }
+
+    public void setIgnoreDataChanges(boolean ignoreDataChanges) {
+        this.ignoreDataChanges = ignoreDataChanges;
+    }
+
     public Path getTodoTxtPath() {
         return todoTxtPath;
     }
@@ -55,6 +68,7 @@ public class TxtTodoManager {
     }
 
     public void readFile() throws FileNotFoundException {
+        this.ignoreDataChanges = true;
         File txtFile = new File(getInstance().getTodoTxtPath().toString());
 
         if (txtFile.exists() && txtFile.canRead()) {
@@ -67,9 +81,11 @@ public class TxtTodoManager {
         }
 
         this.sortTasks();
+        this.ignoreDataChanges = false;
     }
 
     public void writeFile() throws IOException {
+        this.ignoreDataChanges = true;
         StringBuilder sb = new StringBuilder();
 
         tasks.forEach(task -> {
@@ -86,6 +102,8 @@ public class TxtTodoManager {
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
+        } finally {
+            this.ignoreDataChanges = true;
         }
     }
 
@@ -103,6 +121,7 @@ public class TxtTodoManager {
     }
 
     public void sortTasks() {
+        this.ignoreDataChanges = true;
         if (this.tasks.size() > 1) {
             Collections.sort(this.tasks, Comparator.nullsLast(
                             Comparator.comparing(TxtTask::isCompleted, Comparator.nullsLast(Comparator.naturalOrder()))
@@ -111,5 +130,6 @@ public class TxtTodoManager {
                     )
             );
         }
+        this.ignoreDataChanges = false;
     }
 }

@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
@@ -44,12 +45,18 @@ public class TaskListCell extends ListCell<TxtTask> {
 
             editContent.setText(TxtTodoConverter.makeString(txtTask));
             editContent.setOnAction(event -> commitEdit(getItem()));
+            editContent.setOnKeyPressed(keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    cancelEdit();
+                }
+            });
 
             setGraphic(taskContent);
         } else {
             // set everything blank
             setGraphic(null);
         }
+
     }
 
     void populateTask(TxtTask txtTask)
@@ -118,13 +125,12 @@ public class TaskListCell extends ListCell<TxtTask> {
         populateTask(getItem());
 
         setGraphic(taskContent);
-        taskContent.requestFocus();
     }
 
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-        System.out.println("Cancelled editing");
+        setGraphic(taskContent);
     }
 
 
