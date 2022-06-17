@@ -19,7 +19,7 @@ jobs:
       - name: Build Windows installer with Maven
         run: mvn -B install --file pom.xml
       - run: mkdir staging && cp target/installer/*.msi staging
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Win-MSI
           path: staging
