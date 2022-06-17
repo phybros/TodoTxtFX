@@ -18,7 +18,7 @@ jobs:
     - name: Build macOS installer with Maven
       run: mvn -B install --file pom.xml
     - run: mkdir staging && cp target/installer/*.pkg staging
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: macOS-PKG
         path: staging
