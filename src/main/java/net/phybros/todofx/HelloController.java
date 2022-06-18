@@ -33,8 +33,8 @@ public class HelloController {
 
     @FXML
     public void onCommitEdit() {
-        TxtTodoManager.getInstance().sortTasks();
         taskList.requestFocus();
+        TxtTodoManager.getInstance().sortTasks();
     }
 
     @FXML
@@ -45,6 +45,14 @@ public class HelloController {
             @Override
             public ListCell<TxtTask> call(ListView<TxtTask> listView) {
                 TaskListCell cell = new TaskListCell();
+
+                cell.itemProperty().addListener((obs, oldItem, newItem) -> {
+                    if (newItem != null) {
+                        cell.setTheTask(newItem);
+                        cell.populateTask();
+                    }
+                });
+
                 return cell;
             }
         });
@@ -65,19 +73,16 @@ public class HelloController {
                 int newPriIndex;
 
                 switch (keyEvent.getCode()) {
-                    case UP:
+                    case UP -> {
                         t = taskList.getSelectionModel().getSelectedItem();
                         newPriIndex = priorityToIndex(t.getPriority()) - 1;
                         if (newPriIndex < 0) newPriIndex = 0;
                         t.setPriority(priorities[newPriIndex]);
                         TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
                         TxtTodoManager.getInstance().sortTasks();
-
                         keyEvent.consume();
-
-                        break;
-
-                    case DOWN:
+                    }
+                    case DOWN -> {
                         t = taskList.getSelectionModel().getSelectedItem();
                         newPriIndex = priorityToIndex(t.getPriority()) + 1;
                         if (newPriIndex >= priorities.length) newPriIndex = priorities.length - 1;
@@ -85,23 +90,20 @@ public class HelloController {
                         TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
                         TxtTodoManager.getInstance().sortTasks();
                         keyEvent.consume();
-                        break;
-
-                    case LEFT:
+                    }
+                    case LEFT -> {
                         t = taskList.getSelectionModel().getSelectedItem();
                         t.setPriority(null);
                         TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
                         TxtTodoManager.getInstance().sortTasks();
                         keyEvent.consume();
-                        break;
-
-                    case N:
+                    }
+                    case N -> {
                         taskEntry.requestFocus();
                         keyEvent.consume();
-                        break;
-
-                    default:
-                        break;
+                    }
+                    default -> {
+                    }
                 }
             } else {
                 if (keyEvent.getCode() == KeyCode.X) {
@@ -128,6 +130,9 @@ public class HelloController {
             public void onChanged(Change<? extends TxtTask> change) {
                 if (!TxtTodoManager.getInstance().isIgnoreDataChanges()) {
                     TxtTodoManager.getInstance().setDirty(true);
+                }
+
+                if (TxtTodoManager.getInstance().isDirty()) {
                     ((Stage) taskList.getScene().getWindow()).setTitle("TodoTxtFX *");
                 }
             }

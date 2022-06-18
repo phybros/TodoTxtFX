@@ -18,6 +18,16 @@ public class TaskListCell extends ListCell<TxtTask> {
     private final Label creationDate;
     private final TextField editContent;
     private TextFlow taskContent;
+    private List<Label> textFlowContents;
+    private TxtTask theTask;
+
+    public TxtTask getTheTask() {
+        return theTask;
+    }
+
+    public void setTheTask(TxtTask theTask) {
+        this.theTask = theTask;
+    }
 
     public TaskListCell() {
         super();
@@ -41,15 +51,7 @@ public class TaskListCell extends ListCell<TxtTask> {
         super.updateItem(txtTask, empty);
 
         if (txtTask != null && !empty) {
-            populateTask(txtTask);
-
-            editContent.setText(TxtTodoConverter.makeString(txtTask));
-            editContent.setOnAction(event -> commitEdit(getItem()));
-            editContent.setOnKeyPressed(keyEvent -> {
-                if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                    cancelEdit();
-                }
-            });
+//            populateTask(txtTask);
 
             setGraphic(taskContent);
         } else {
@@ -59,52 +61,63 @@ public class TaskListCell extends ListCell<TxtTask> {
 
     }
 
-    void populateTask(TxtTask txtTask)
+    public void populateTask()
     {
-        //taskContent.getChildren().clear();
+        if (!editContent.getText().equals(theTask.getName())) {
+            editContent.setText(TxtTodoConverter.makeString(theTask));
+            editContent.setOnAction(event -> {
+                commitEdit(getItem());
+            });
+            editContent.setOnKeyPressed(keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    cancelEdit();
+                }
+            });
+        }
 
-        if (txtTask.isCompleted()) {
+        if (theTask.isCompleted()) {
             // If it's done, just show it raw and gray and italic
-            completedTask.setText(TxtTodoConverter.makeString(txtTask));
+            completedTask.setText(TxtTodoConverter.makeString(theTask));
 //            taskContent.getChildren().addAll(completedTask);
             taskContent = new TextFlow(completedTask);
         } else {
 
-            if (txtTask.isCompleted()) {
+            if (theTask.isCompleted()) {
                 completed.setText("x ");
             } else {
                 completed.setText("");
             }
 
-            if (txtTask.getPriority() != null) {
-                priority.setText(String.format("(%s) ", txtTask.getPriority()));
+            if (theTask.getPriority() != null) {
+                priority.setText(String.format("(%s) ", theTask.getPriority()));
             } else {
                 priority.setText("");
             }
 
-            if (txtTask.getCompletionDate() != null) {
-                String dateString = TxtTodoConverter.dateToString(txtTask.getCompletionDate());
+            if (theTask.getCompletionDate() != null) {
+                String dateString = TxtTodoConverter.dateToString(theTask.getCompletionDate());
                 completionDate.setText(String.format("%s ", dateString));
             } else {
                 completionDate.setText("");
             }
 
-            if (txtTask.getCreationDate() != null) {
-                String dateString = TxtTodoConverter.dateToString(txtTask.getCreationDate());
+            if (theTask.getCreationDate() != null) {
+                String dateString = TxtTodoConverter.dateToString(theTask.getCreationDate());
                 creationDate.setText(String.format("%s ", dateString));
             } else {
                 creationDate.setText("");
             }
 
-            List<Node> nodes = new ArrayList<>();
-            nodes.add(completed);
-            nodes.add(priority);
-            nodes.add(completionDate);
-            nodes.add(creationDate);
-            nodes.addAll(TxtTodoConverter.makeTextFlow(txtTask));
+                List<Node> nodes = new ArrayList<>();
+                nodes.add(completed);
+                nodes.add(priority);
+                nodes.add(completionDate);
+                nodes.add(creationDate);
 
-            taskContent = new TextFlow(nodes.toArray(new Node[0]));
-//            taskContent.getChildren().addAll(completed, priority, completionDate, creationDate, name);
+                textFlowContents = TxtTodoConverter.makeTextFlow(theTask);
+                nodes.addAll(textFlowContents);
+
+                taskContent = new TextFlow(nodes.toArray(new Node[0]));
         }
     }
 
@@ -119,10 +132,15 @@ public class TaskListCell extends ListCell<TxtTask> {
     @Override
     public void commitEdit(TxtTask txtTask) {
         System.out.println("Done editing");
+        String newName = editContent.getText().trim();
+        if (!newName.equals(txtTask.getName())) {
+            TxtTodoManager.getInstance().setDirty(true);
+        }
+
         txtTask.update(editContent.getText().trim());
         super.commitEdit(txtTask);
-
-        populateTask(getItem());
+        this.theTask = txtTask;
+        populateTask();
 
         setGraphic(taskContent);
     }
