@@ -3,10 +3,11 @@ package net.phybros.todofx;
 import javafx.scene.control.Label;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,10 +20,10 @@ public class TxtTodoConverter {
     private static final Pattern contextsPattern = Pattern.compile(contextsRegex);
     private static final String todoTxtPattern = "^(?<completed>x )?(\\((?<priority>[A-Z])\\))? ?(?<completionDate>\\d{4}-\\d{2}-\\d{2})? ?(?<creationDate>\\d{4}-\\d{2}-\\d{2})? ?(?<remainder>.*)$";
     private static final Pattern taskPattern = Pattern.compile(todoTxtPattern);
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static String dateToString(Date date) {
-        return formatter.format(date);
+    public static String dateToString(LocalDate date) {
+        return date.format(formatter);
     }
 
     public static TxtTask fromString(String input) {
@@ -35,17 +36,11 @@ public class TxtTodoConverter {
             result.setPriority(m.group("priority"));
             result.setName(m.group("remainder"));
 
-            try {
-                String completionDateString = m.group("completionDate");
-                result.setCompletionDate(completionDateString != null ? formatter.parse(completionDateString) : null);
+            String completionDateString = m.group("completionDate");
+            result.setCompletionDate(completionDateString != null ? LocalDate.parse(completionDateString, formatter) : null);
 
-                String creationDateString = m.group("creationDate");
-                result.setCreationDate(creationDateString != null ? formatter.parse(creationDateString) : null);
-            } catch (ParseException e) {
-                // don't care
-            }
-
-
+            String creationDateString = m.group("creationDate");
+            result.setCreationDate(creationDateString != null ? LocalDate.parse(creationDateString, formatter) : null);
         }
 
         return result;
@@ -59,11 +54,11 @@ public class TxtTodoConverter {
             sb.append(String.format("(%s) ", task.getPriority()));
         }
         if (task.getCompletionDate() != null) {
-            sb.append(formatter.format(task.getCompletionDate()));
+            sb.append(task.getCompletionDate().format(formatter));
             sb.append(" ");
         }
         if (task.getCreationDate() != null) {
-            sb.append(formatter.format(task.getCreationDate()));
+            sb.append(task.getCreationDate().format(formatter));
             sb.append(" ");
         }
         if (task.getName() != null) {

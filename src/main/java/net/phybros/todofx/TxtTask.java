@@ -1,7 +1,8 @@
 package net.phybros.todofx;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class TxtTask {
@@ -17,9 +18,9 @@ public class TxtTask {
 
     private String priority;
 
-    private Date completionDate;
+    private LocalDate completionDate;
 
-    private Date creationDate;
+    private LocalDate creationDate;
 
     private List<String> projects;
 
@@ -50,19 +51,19 @@ public class TxtTask {
         this.name = newTask.getName();
     }
 
-    public Date getCompletionDate() {
+    public LocalDate getCompletionDate() {
         return completionDate;
     }
 
-    public void setCompletionDate(Date completionDate) {
+    public void setCompletionDate(LocalDate completionDate) {
         this.completionDate = completionDate;
     }
 
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 

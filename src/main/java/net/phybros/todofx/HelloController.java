@@ -10,6 +10,8 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class HelloController {
@@ -80,6 +82,7 @@ public class HelloController {
                         t.setPriority(priorities[newPriIndex]);
                         TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
                         TxtTodoManager.getInstance().sortTasks();
+                        taskList.refresh();
                         keyEvent.consume();
                     }
                     case DOWN -> {
@@ -89,6 +92,7 @@ public class HelloController {
                         t.setPriority(priorities[newPriIndex]);
                         TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
                         TxtTodoManager.getInstance().sortTasks();
+                        taskList.refresh();
                         keyEvent.consume();
                     }
                     case LEFT -> {
@@ -96,6 +100,7 @@ public class HelloController {
                         t.setPriority(null);
                         TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
                         TxtTodoManager.getInstance().sortTasks();
+                        taskList.refresh();
                         keyEvent.consume();
                     }
                     case N -> {
@@ -114,7 +119,7 @@ public class HelloController {
                         t.setCompleted(false);
                     } else {
                         t.setCompleted(true);
-                        t.setCompletionDate(new Date());
+                        t.setCompletionDate(LocalDate.now());
                         t.setPriority(null);
                     }
 
