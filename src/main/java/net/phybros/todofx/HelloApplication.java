@@ -69,7 +69,7 @@ public class HelloApplication extends Application {
 
         stage.show();
 
-        setUpFileWatcher();
+setUpFileWatcher();
     }
 
     public void openFile(Stage stage, Preferences prefs, boolean reload) throws FileNotFoundException {
@@ -106,36 +106,11 @@ public class HelloApplication extends Application {
 
 
     private void setUpFileWatcher() {
-        Thread th = new Thread(() -> {
-            // TODO: Set up file watcher
-            try {
-                WatchService watchService = FileSystems.getDefault().newWatchService();
-                Path path = Paths.get(chosenFile.getParent());
-                path.register(watchService, ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE);
-                boolean poll = true;
-                while (poll) {
-                    WatchKey key = watchService.take();
-                    for (WatchEvent<?> event : key.pollEvents()) {
-                        // TODO: Do some action when there is something detected
-                        Platform.runLater(() -> {
-                            Instant lastSave = TxtTodoManager.getInstance().getLastSave();
-                            Instant fiveSecondsAgo = Instant.now().minus(Duration.ofSeconds(15));
+        TodoTxtFileWatcher watcher = new TodoTxtFileWatcher(chosenFile.getAbsolutePath());
 
-                            if (lastSave.isBefore(fiveSecondsAgo)) {
-                                if (event.context().toString().equals(chosenFile.getName()) && event.kind() == ENTRY_MODIFY) {
-                                    try {
-                                        TxtTodoManager.getInstance().readFile();
-                                    } catch (FileNotFoundException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-                            } else {
-                                System.out.println("Saved recently, ignoring");
-                            }
-                        });
-                    }
-                    poll = key.reset();
-                }
+        Thread th = new Thread(() -> {
+            try {
+                watcher.watchFile();
             } catch (Exception e) {
                 e.printStackTrace();
             }

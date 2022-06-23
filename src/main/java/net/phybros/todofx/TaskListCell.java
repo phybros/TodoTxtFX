@@ -61,8 +61,8 @@ public class TaskListCell extends ListCell<TxtTask> {
 
     }
 
-    public void populateTask()
-    {
+    public void populateTask() {
+        System.out.println("pop");
         if (!editContent.getText().equals(theTask.getName())) {
             editContent.setText(TxtTodoConverter.makeString(theTask));
             editContent.setOnAction(event -> {
@@ -81,12 +81,6 @@ public class TaskListCell extends ListCell<TxtTask> {
 //            taskContent.getChildren().addAll(completedTask);
             taskContent = new TextFlow(completedTask);
         } else {
-
-            if (theTask.isCompleted()) {
-                completed.setText("x ");
-            } else {
-                completed.setText("");
-            }
 
             if (theTask.getPriority() != null) {
                 priority.setText(String.format("(%s) ", theTask.getPriority()));
@@ -108,16 +102,16 @@ public class TaskListCell extends ListCell<TxtTask> {
                 creationDate.setText("");
             }
 
-                List<Node> nodes = new ArrayList<>();
-                nodes.add(completed);
-                nodes.add(priority);
-                nodes.add(completionDate);
-                nodes.add(creationDate);
+            List<Node> nodes = new ArrayList<>();
+            nodes.add(completed);
+            nodes.add(priority);
+            nodes.add(completionDate);
+            nodes.add(creationDate);
 
-                textFlowContents = TxtTodoConverter.makeTextFlow(theTask);
-                nodes.addAll(textFlowContents);
+            textFlowContents = TxtTodoConverter.makeTextFlow(theTask);
+            nodes.addAll(textFlowContents);
 
-                taskContent = new TextFlow(nodes.toArray(new Node[0]));
+            taskContent = new TextFlow(nodes.toArray(new Node[0]));
         }
     }
 

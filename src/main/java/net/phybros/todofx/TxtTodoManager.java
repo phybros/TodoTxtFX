@@ -19,7 +19,7 @@ public class TxtTodoManager {
 
     private Path todoTxtPath;
 
-    private Instant lastSave;
+    private Instant lastSave = Instant.EPOCH;
 
     private boolean ignoreDataChanges = false;
 
