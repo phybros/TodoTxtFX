@@ -17,7 +17,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: "TodoTxtFX ${{ github.ref_name }}"
           draft: true
 
   build-win:
@@ -39,12 +38,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: "TodoTxtFX ${{ github.ref_name }}"
-          draft: false
           files: stage/*.msi
 
   build-mac:
-    needs: make-release
+    needs: build-win
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -62,6 +59,15 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: "TodoTxtFX ${{ github.ref_name }}"
-          draft: false
           files: stage/*.pkg
+
+  finalize-release:
+    needs: [build-win, build-mac]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: "TodoTxtFX ${{ github.ref_name }}"
+        draft: false
