@@ -45,6 +45,7 @@ jobs:
         with:
           upload_url: ${{ needs.make-release.outputs.upload_url }}
           asset_path: target/installer/*.msi
+          asset_content_type: application/octet-stream
           asset_name: "TodoTxtFX-Windows-${{ github.ref }}.msi"
 
   build-mac:
@@ -68,4 +69,5 @@ jobs:
         with:
           upload_url: ${{ needs.make-release.outputs.upload_url }}
           asset_path: target/installer/*.pkg
+          asset_content_type: application/octet-stream
           asset_name: "TodoTxtFX-macOS-${{ github.ref }}.pkg"
