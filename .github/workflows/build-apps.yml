@@ -12,11 +12,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: Set up JDK 18
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'adopt'
+          java-version: '18'
+          distribution: 'temurin'
           cache: maven
       - name: Build Windows installer with Maven
         run: mvn -B install --file pom.xml
@@ -36,11 +36,11 @@ jobs:
       release_id: ${{ steps.release.outputs.id }}
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: Set up JDK 18
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'adopt'
+          java-version: '18'
+          distribution: 'temurin'
           cache: maven
       - name: Build macOS dmg with Maven
         run: mvn -B install --file pom.xml
