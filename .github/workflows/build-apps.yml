@@ -7,20 +7,8 @@ on:
       - '*'
 
 jobs:
-  make-release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.make-release.outputs.upload_url }}
-    steps:
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          draft: true
 
   build-win:
-    needs: make-release
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -38,10 +26,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          draft: true
           files: stage/*.msi
 
   build-mac:
-    needs: make-release
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -59,6 +47,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          draft: true
           files: stage/*.pkg
 
   finalize-release:
