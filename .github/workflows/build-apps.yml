@@ -18,6 +18,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           name: "TodoTxtFX ${{ github.ref_name }}"
+          draft: true
 
   build-win:
     needs: make-release
@@ -32,12 +33,14 @@ jobs:
           cache: maven
       - name: Build Windows installer with Maven
         run: mvn -B install --file pom.xml
+      - name: Stage installer
+        run: mkdir -p stage && cp target/installer/TodoTxtFX-*.msi stage/TodoTxtFX-Win-${{ github.ref_name }}.msi
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: "TodoTxtFX ${{ github.ref_name }}"
-          files: target/installer/*.msi
+          draft: false
+          files: stage/*.msi
 
   build-mac:
     needs: make-release
@@ -52,9 +55,11 @@ jobs:
           cache: maven
       - name: Build macOS installer with Maven
         run: mvn -B install --file pom.xml
+      - name: Stage installer
+        run: mkdir -p stage && cp target/installer/TodoTxtFX-*.pkg stage/TodoTxtFX-macOS-${{ github.ref_name }}.pkg
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: "TodoTxtFX ${{ github.ref_name }}"
-          files: target/installer/*.pkg
+          draft: false
+          files: stage/*.pkg
