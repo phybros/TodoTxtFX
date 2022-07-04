@@ -13,7 +13,7 @@ JAVA_VERSION=17
 MAIN_JAR="todofx-$PROJECT_VERSION.jar"
 
 # Set desired installer type: "dmg", "pkg".
-INSTALLER_TYPE=pkg
+INSTALLER_TYPE=dmg
 
 echo "java home: $JAVA_HOME"
 echo "project version: $PROJECT_VERSION"
