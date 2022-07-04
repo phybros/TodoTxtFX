@@ -30,7 +30,7 @@ public class TodoTxtFileWatcher extends FileWatcher {
             });
 
         } else {
-            System.out.println("File changed, but I saved recently ... ignoring.");
+            //System.out.println("File changed, but I saved recently ... ignoring.");
         }
     }
 }
