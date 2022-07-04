@@ -11,18 +11,13 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      upload_url: ${{ steps.make-release.outputs.upload_url }}
     steps:
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          tag_name: ${{ github.ref }}
-          release_name: "TodoTxtFX ${{ github.ref }}"
-          draft: true
-          prerelease: false
+          name: "TodoTxtFX ${{ github.ref_name }}"
 
   build-win:
     needs: make-release
@@ -37,16 +32,12 @@ jobs:
           cache: maven
       - name: Build Windows installer with Maven
         run: mvn -B install --file pom.xml
-      - name: Upload assets
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          upload_url: ${{ needs.make-release.outputs.upload_url }}
-          asset_path: target/installer/*.msi
-          asset_content_type: application/octet-stream
-          asset_name: "TodoTxtFX-Windows-${{ github.ref }}.msi"
+          name: "TodoTxtFX ${{ github.ref_name }}"
+          files: target/installer/*.msi
 
   build-mac:
     needs: make-release
@@ -61,13 +52,9 @@ jobs:
           cache: maven
       - name: Build macOS installer with Maven
         run: mvn -B install --file pom.xml
-      - name: Upload assets
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          upload_url: ${{ needs.make-release.outputs.upload_url }}
-          asset_path: target/installer/*.pkg
-          asset_content_type: application/octet-stream
-          asset_name: "TodoTxtFX-macOS-${{ github.ref }}.pkg"
+          name: "TodoTxtFX ${{ github.ref_name }}"
+          files: target/installer/*.pkg
