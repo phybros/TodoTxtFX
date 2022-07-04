@@ -62,7 +62,6 @@ public class TaskListCell extends ListCell<TxtTask> {
     }
 
     public void populateTask() {
-        System.out.println("pop");
         if (!editContent.getText().equals(theTask.getName())) {
             editContent.setText(TxtTodoConverter.makeString(theTask));
             editContent.setOnAction(event -> {
@@ -125,7 +124,7 @@ public class TaskListCell extends ListCell<TxtTask> {
 
     @Override
     public void commitEdit(TxtTask txtTask) {
-        System.out.println("Done editing");
+//        System.out.println("Done editing");
         String newName = editContent.getText().trim();
         if (!newName.equals(txtTask.getName())) {
             TxtTodoManager.getInstance().setDirty(true);
