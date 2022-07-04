@@ -26,6 +26,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          name: "TodoTxtFX ${{ github.ref_name }}"
           draft: true
           files: stage/*.msi
 
@@ -47,16 +48,17 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          name: "TodoTxtFX ${{ github.ref_name }}"
           draft: true
           files: stage/*.pkg
 
   finalize-release:
-    needs: [build-win, build-mac]
+    needs: [ build-win, build-mac ]
     runs-on: ubuntu-latest
     steps:
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        name: "TodoTxtFX ${{ github.ref_name }}"
-        draft: false
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: "TodoTxtFX ${{ github.ref_name }}"
+          draft: false
