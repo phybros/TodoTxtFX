@@ -61,4 +61,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ steps.build-mac.outputs.id }}
+          release_id: ${{ needs.build-mac.outputs.id }}
