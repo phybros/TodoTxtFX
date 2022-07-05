@@ -95,4 +95,5 @@ call "%JAVA_HOME%\bin\jpackage" ^
   --win-dir-chooser ^
   --win-shortcut ^
   --win-per-user-install ^
-  --win-menu
+  --win-menu ^
+  --icon src/main/resources/net/phybros/todofx/icons.ico

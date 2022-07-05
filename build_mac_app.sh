@@ -99,4 +99,5 @@ $JAVA_HOME/bin/jpackage \
 --vendor "Phytek Software LLC" \
 --copyright "Copyright © 2019-22 Phytek Software LLC" \
 --mac-package-identifier net.phybros.todofx \
---mac-package-name TodoTxtFX
+--mac-package-name TodoTxtFX \
+--icon src/main/resources/net/phybros/todofx/icons.icns
