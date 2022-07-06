@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -64,12 +65,15 @@ public class HelloApplication extends Application {
 
         scene.getAccelerators().put(saveAccelerator, saveRunnale);
 
+        Image icon = new Image(getClass().getResource("icon.png").toExternalForm());
+        stage.getIcons().add(icon);
+
         stage.setTitle("TodoTxtFX");
         stage.setScene(scene);
 
         stage.show();
 
-setUpFileWatcher();
+        setUpFileWatcher();
     }
 
     public void openFile(Stage stage, Preferences prefs, boolean reload) throws FileNotFoundException {
