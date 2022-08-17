@@ -12,6 +12,8 @@ public class TxtTask {
         contexts = new ArrayList<>();
     }
 
+    private String raw;
+
     private String name;
 
     private boolean completed;
@@ -44,11 +46,20 @@ public class TxtTask {
 
     public void update(String rawString) {
         TxtTask newTask = TxtTodoConverter.fromString(rawString);
+        this.raw = rawString.trim();
         this.completed = newTask.isCompleted();
         this.priority = newTask.getPriority();
         this.completionDate = newTask.getCompletionDate();
         this.creationDate = newTask.getCreationDate();
         this.name = newTask.getName();
+    }
+
+    public String getRaw() {
+        return raw;
+    }
+
+    public void setRaw(String raw) {
+        this.raw = raw;
     }
 
     public LocalDate getCompletionDate() {

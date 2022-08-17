@@ -28,6 +28,7 @@ public class TxtTodoConverter {
 
     public static TxtTask fromString(String input) {
         TxtTask result = new TxtTask();
+        result.setRaw(input.trim());
 
         Matcher m = taskPattern.matcher(input);
 

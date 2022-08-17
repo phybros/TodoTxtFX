@@ -126,7 +126,7 @@ public class TxtTodoManager {
             Collections.sort(this.tasks, Comparator.nullsLast(
                             Comparator.comparing(TxtTask::isCompleted, Comparator.nullsLast(Comparator.naturalOrder()))
                                     .thenComparing(TxtTask::getPriority, Comparator.nullsLast(Comparator.naturalOrder()))
-                                    .thenComparing(TxtTask::getName, Comparator.nullsLast(Comparator.naturalOrder()))
+                                    .thenComparing(TxtTask::getRaw, Comparator.nullsLast(Comparator.naturalOrder()))
                     )
             );
         }

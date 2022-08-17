@@ -1,6 +1,21 @@
+@font-face {
+    -fx-font-family: "Open Sans";
+    src: url("fonts/OpenSans-Regular.ttf");
+}
+
+@font-face {
+    -fx-font-family: "Open Sans Bold";
+    src: url("fonts/OpenSans-Bold.ttf");
+}
+
+@font-face {
+    -fx-font-family: "Open Sans Italic";
+    src: url("fonts/OpenSans-Italic.ttf");
+}
+
 .root{
-    -fx-font-size: 13px;
-    -fx-font-family: "Arial";
+    -fx-font-family: "Open Sans", sans-serif;
+    -fx-font-size: 12px;
 }
 
 .priority {
