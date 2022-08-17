@@ -110,6 +110,7 @@ public class HelloController {
                 }
             } else {
                 if (keyEvent.getCode() == KeyCode.X) {
+                    int currentlySelectedIndex = taskList.getSelectionModel().getSelectedIndex();
                     TxtTask t = taskList.getSelectionModel().getSelectedItem();
 
                     if (t.isCompleted()) {
@@ -123,6 +124,11 @@ public class HelloController {
 
                     TxtTodoManager.getInstance().getTasks().set(taskList.getSelectionModel().getSelectedIndex(), t);
                     TxtTodoManager.getInstance().sortTasks();
+
+                    if (TxtTodoManager.getInstance().getTasks().size() > 0) {
+                        taskList.getSelectionModel().select(currentlySelectedIndex);
+                    }
+
                     keyEvent.consume();
                 }
             }
