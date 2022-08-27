@@ -4,6 +4,8 @@
 
 TodoTxtFX is a macOS and Windows client for the [todo.txt](https://github.com/todotxt/todo.txt) format.
 
+<img width="500" alt="Screenshot of TodoTxtFX running on macOS" src="https://user-images.githubusercontent.com/1985132/187041911-30d98aad-e23b-4f6b-9e51-aa5e710a4118.png">
+
 ## Installing
 
 The latest build is always available at [https://github.com/phybros/TodoTxtFX/releases/latest](https://github.com/phybros/TodoTxtFX/releases/latest). Go there and download the right client for your OS (`.msi` for Windows, `.pkg` for macOS).
